@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Nanita Digital — Carousel Template IA Marketing</title>
+  <link rel="preconnect" href="<https://fonts.googleapis.com>">
+  <link rel="preconnect" href="<https://fonts.gstatic.com>" crossorigin>
+  <link href="<https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=Inter:wght@400;500;600;700&display=swap>" rel="stylesheet">
+  <style>
+    :root {
+      --purple:       #6B2FFF;
+      --purple-soft:  #9B6FFF;
+      --purple-pale:  #CDB8FF;
+      --cyan:         #00E8CC;
+      --cyan-dim:     #00B09B;
+      --coral:        #FF3B6B;
+      --orange:       #FF7A2F;
+      --bg:           #05050E;
+      --text:         #FFFFFF;
+      --muted:        #7A7A9D;
+      --dim:          #35354F;
+      --g-brand:    linear-gradient(135deg, #6B2FFF 0%, #00E8CC 100%);
+      --g-fire:     linear-gradient(135deg, #FF3B6B 0%, #FF7A2F 100%);
+      --g-midnight: linear-gradient(135deg, #6B2FFF 0%, #FF3B6B 100%);
+      --scale: 0.46;
+    }
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      background: #020209;
+      font-family: 'Inter', sans-serif;
+      color: white;
+      padding: 60px 40px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 52px;
+    }
+    .page-header { text-align: center; }
+    .page-header h1 {
+      font-family: 'Syne', sans-serif;
+      font-size: 30px;
+      font-weight: 800;
+      background: var(--g-brand);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      letter-spacing: -0.01em;
+    }
+    .page-header p { margin-top: 10px; font-size: 14px; color: var(--muted); letter-spacing: 0.06em; }
+    .safe-note {
+      margin-top: 14px; font-size: 12px; color: var(--dim);
+      background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 8px; padding: 8px 16px; display: inline-block;
+    }
+    .slide-block { display: flex; flex-direction: column; align-items: center; gap: 12px; }
+    .slide-label { font-size: 11px; color: var(--dim); text-transform: uppercase; letter-spacing: 0.14em; font-weight: 600; }
+    .slide-preview {
+      width: calc(1080px * var(--scale));
+      height: calc(1080px * var(--scale));
+      overflow: hidden; border-radius: 14px;
+      box-shadow: 0 30px 90px rgba(0,0,0,0.75), 0 0 0 1px rgba(255,255,255,0.06);
+      position: relative;
+    }
+    /* THE ACTUAL SLIDE — 1080×1080 | Safe zones: top 120px · bottom 170px · sides 70px */
+    .slide {
+      width: 1080px; height: 1080px;
+      position: relative; overflow: hidden;
+      background: var(--bg);
+      transform: scale(var(--scale));
+      transform-origin: top left;
+      font-family: 'Inter', sans-serif;
+      color: var(--text);
+    }
+    .safe {
+      position: absolute;
+      top: 130px; left: 70px; right: 70px; bottom: 185px;
+      display: flex; flex-direction: column;
+    }
+    .logo {
+      position: absolute; bottom: 188px; left: 70px;
+      display: flex; align-items: center; gap: 13px; z-index: 30;
+    }
+    .logo-icon { width: 50px; height: 50px; flex-shrink: 0; }
+    .logo-wordmark { display: flex; flex-direction: column; gap: 1px; }
+    .logo-name {
+      font-family: 'Syne', sans-serif; font-size: 21px; font-weight: 800;
+      background: var(--g-brand); -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent; background-clip: text; letter-spacing: 0.05em;
+    }
+    .logo-handle { font-size: 14px; color: var(--muted); letter-spacing: 0.07em; }
+    .counter {
+      position: absolute; bottom: 192px; right: 70px;
+      font-family: 'Syne', sans-serif; font-size: 18px; font-weight: 700;
+      color: var(--dim); letter-spacing: 0.06em; z-index: 30;
+    }
+    .tag {
+      display: inline-flex; align-items: center;
+      padding: 9px 22px; border-radius: 100px;
+      font-size: 16px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase;
+    }
+    .tag-purple { background: rgba(107,47,255,.14); border: 1px solid rgba(107,47,255,.45); color: var(--purple-pale); }
+    .tag-cyan   { background: rgba(0,232,204,.09);  border: 1px solid rgba(0,232,204,.38);  color: var(--cyan); }
+    .tag-coral  { background: rgba(255,59,107,.09); border: 1px solid rgba(255,59,107,.38); color: var(--coral); }
+    .tag-orange { background: rgba(255,122,47,.09); border: 1px solid rgba(255,122,47,.38); color: var(--orange); }
+    .gb  { background: var(--g-brand);    -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+    .gf  { background: var(--g-fire);     -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+    .gm  { background: var(--g-midnight); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+    .orb { position: absolute; border-radius: 50%; pointer-events: none; }
+    .grid-bg {
+      position: absolute; inset: 0;
+      background-image: linear-gradient(rgba(107,47,255,.04) 1px, transparent 1px), linear-gradient(90deg, rgba(107,47,255,.04) 1px, transparent 1px);
+      background-size: 72px 72px; pointer-events: none;
+    }
+    .top-rule { position: absolute; top: 0; left: 0; right: 0; height: 3px; background: var(--g-brand); border-radius: 0 0 4px 4px; }
+
+    /* SLIDE 1 — HOOK */
+    .s1-orb1 { width: 720px; height: 720px; background: radial-gradient(circle, rgba(107,47,255,.32) 0%, transparent 65%); top: -200px; right: -160px; }
+    .s1-orb2 { width: 420px; height: 420px; background: radial-gradient(circle, rgba(0,232,204,.12) 0%, transparent 65%); bottom: 40px; left: -80px; }
+    .s1 .safe { justify-content: center; gap: 34px; }
+    .s1-eyebrow { font-size: 19px; font-weight: 700; color: var(--cyan); letter-spacing: 0.18em; text-transform: uppercase; display: flex; align-items: center; gap: 14px; }
+    .s1-eyebrow::before { content: ''; display: block; width: 38px; height: 3px; background: var(--g-brand); border-radius: 3px; }
+    .s1-headline { font-family: 'Syne', sans-serif; font-size: 110px; font-weight: 800; line-height: 0.92; letter-spacing: -0.03em; }
+    .s1-sub { font-size: 27px; color: rgba(255,255,255,.52); line-height: 1.55; max-width: 650px; font-weight: 400; }
+    .s1-swipe { display: flex; align-items: center; gap: 16px; margin-top: 14px; }
+    .s1-swipe-btn {
+      display: flex; align-items: center; gap: 10px; padding: 14px 28px; border-radius: 100px;
+      border: 1.5px solid rgba(255,255,255,.18); background: rgba(255,255,255,.04);
+      font-size: 18px; font-weight: 700; color: rgba(255,255,255,.65); letter-spacing: 0.06em; text-transform: uppercase;
+    }
+
+    /* SLIDE 2 — PROBLEM */
+    .s2-orb1 { width: 580px; height: 580px; background: radial-gradient(circle, rgba(255,59,107,.16) 0%, transparent 65%); bottom: -100px; right: -120px; }
+    .s2 .safe { justify-content: center; gap: 42px; }
+    .s2-headline { font-family: 'Syne', sans-serif; font-size: 66px; font-weight: 800; line-height: 1.05; letter-spacing: -0.025em; }
+    .s2-items { display: flex; flex-direction: column; gap: 16px; }
+    .s2-item { display: flex; align-items: center; gap: 22px; padding: 21px 28px; background: rgba(255,59,107,.06); border: 1px solid rgba(255,59,107,.13); border-radius: 14px; }
+    .s2-item-icon { font-size: 32px; width: 44px; text-align: center; flex-shrink: 0; }
+    .s2-item-text { font-size: 22px; color: rgba(255,255,255,.8); line-height: 1.3; font-weight: 500; }
+
+    /* SLIDE 3 — INSIGHT */
+    .s3-orb1 { width: 900px; height: 900px; background: radial-gradient(circle, rgba(107,47,255,.11) 0%, transparent 58%); top: 50%; left: 50%; transform: translate(-50%,-50%); }
+    .s3 .safe { justify-content: center; align-items: center; text-align: center; gap: 36px; }
+    .s3-guillemet { font-family: 'Syne', sans-serif; font-size: 200px; line-height: 0.45; background: var(--g-brand); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; opacity: 0.22; user-select: none; }
+    .s3-quote { font-family: 'Syne', sans-serif; font-size: 70px; font-weight: 800; line-height: 1.06; letter-spacing: -0.025em; margin-top: -52px; }
+    .s3-divider { width: 70px; height: 3px; background: var(--g-brand); border-radius: 3px; }
+    .s3-sub { font-size: 23px; color: rgba(255,255,255,.48); line-height: 1.65; max-width: 680px; font-weight: 400; }
+
+    /* SLIDE 4 — OPPORTUNITY */
+    .s4-orb1 { width: 560px; height: 560px; background: radial-gradient(circle, rgba(0,232,204,.1) 0%, transparent 65%); top: -80px; left: -100px; }
+    .s4-orb2 { width: 360px; height: 360px; background: radial-gradient(circle, rgba(107,47,255,.14) 0%, transparent 65%); bottom: 60px; right: -60px; }
+    .s4 .safe { justify-content: center; gap: 38px; }
+    .s4-headline { font-family: 'Syne', sans-serif; font-size: 66px; font-weight: 800; line-height: 1.0; letter-spacing: -0.025em; }
+    .s4-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .s4-card { padding: 28px 26px; background: rgba(255,255,255,.03); border: 1px solid rgba(255,255,255,.07); border-radius: 18px; display: flex; flex-direction: column; gap: 13px; }
+    .s4-card:nth-child(1) { border-color: rgba(107,47,255,.25); }
+    .s4-card:nth-child(2) { border-color: rgba(0,232,204,.25); }
+    .s4-card:nth-child(3) { border-color: rgba(255,122,47,.25); }
+    .s4-card:nth-child(4) { border-color: rgba(255,59,107,.25); }
+    .s4-card-icon { font-size: 34px; }
+    .s4-card-title { font-family: 'Syne', sans-serif; font-size: 23px; font-weight: 700; line-height: 1.2; }
+    .s4-card-text { font-size: 18px; color: var(--muted); line-height: 1.5; }
+
+    /* SLIDE 5 — HOW TO START */
+    .s5-orb1 { width: 500px; height: 500px; background: radial-gradient(circle, rgba(107,47,255,.18) 0%, transparent 65%); bottom: 0; right: -60px; }
+    .s5 .safe { justify-content: center; gap: 46px; }
+    .s5-headline { font-family: 'Syne', sans-serif; font-size: 70px; font-weight: 800; line-height: 1.0; letter-spacing: -0.025em; }
+    .s5-steps { display: flex; flex-direction: column; gap: 26px; }
+    .s5-step { display: flex; align-items: flex-start; gap: 24px; }
+    .s5-num { width: 66px; height: 66px; flex-shrink: 0; border-radius: 16px; background: var(--g-brand); display: flex; align-items: center; justify-content: center; font-family: 'Syne', sans-serif; font-size: 30px; font-weight: 800; color: white; }
+    .s5-step-body { flex: 1; padding-top: 7px; }
+    .s5-step-title { font-family: 'Syne', sans-serif; font-size: 27px; font-weight: 700; margin-bottom: 7px; }
+    .s5-step-text { font-size: 20px; color: var(--muted); line-height: 1.5; }
+
+    /* SLIDE 6 — WHY EXPERT */
+    .s6-orb1 { width: 820px; height: 820px; background: radial-gradient(circle, rgba(107,47,255,.13) 0%, transparent 58%); top: 50%; left: 50%; transform: translate(-50%,-50%); }
+    .s6 .safe { justify-content: center; gap: 42px; }
+    .s6-headline { font-family: 'Syne', sans-serif; font-size: 66px; font-weight: 800; line-height: 1.06; letter-spacing: -0.025em; }
+    .s6-list { display: flex; flex-direction: column; gap: 20px; }
+    .s6-item { display: flex; align-items: flex-start; gap: 20px; }
+    .s6-bullet { width: 16px; height: 16px; flex-shrink: 0; border-radius: 50%; background: var(--g-brand); margin-top: 9px; }
+    .s6-item-text { font-size: 26px; line-height: 1.45; }
+    .s6-item-text em { font-style: normal; color: var(--cyan); font-weight: 600; }
+
+    /* SLIDE 7 — AI AGENT */
+    .s7-orb1 { width: 480px; height: 480px; background: radial-gradient(circle, rgba(0,232,204,.12) 0%, transparent 65%); top: -80px; right: -60px; }
+    .s7-orb2 { width: 380px; height: 380px; background: radial-gradient(circle, rgba(107,47,255,.16) 0%, transparent 65%); bottom: 0; left: -40px; }
+    .s7 .safe { justify-content: center; gap: 38px; }
+    .s7-headline { font-family: 'Syne', sans-serif; font-size: 74px; font-weight: 800; line-height: 1.0; letter-spacing: -0.025em; }
+    .s7-def { position: relative; padding: 30px 34px; background: rgba(107,47,255,.07); border-radius: 0 16px 16px 0; font-size: 24px; color: rgba(255,255,255,.72); line-height: 1.65; }
+    .s7-def::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 5px; border-radius: 5px 0 0 5px; background: var(--g-brand); }
+    .s7-features { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 14px; }
+    .s7-feat { padding: 24px 18px; background: rgba(255,255,255,.03); border: 1px solid rgba(255,255,255,.07); border-radius: 16px; text-align: center; display: flex; flex-direction: column; align-items: center; gap: 11px; }
+    .s7-feat:nth-child(1) { border-color: rgba(107,47,255,.25); }
+    .s7-feat:nth-child(2) { border-color: rgba(0,232,204,.25); }
+    .s7-feat:nth-child(3) { border-color: rgba(255,122,47,.25); }
+    .s7-feat-icon { font-size: 42px; }
+    .s7-feat-label { font-family: 'Syne', sans-serif; font-size: 22px; font-weight: 700; }
+
+    /* SLIDE 8 — RESULTS */
+    .s8-orb1 { width: 650px; height: 650px; background: radial-gradient(circle, rgba(0,232,204,.1) 0%, transparent 60%); top: -150px; right: -150px; }
+    .s8-orb2 { width: 400px; height: 400px; background: radial-gradient(circle, rgba(107,47,255,.12) 0%, transparent 65%); bottom: 0; left: -80px; }
+    .s8 .safe { justify-content: center; gap: 46px; }
+    .s8-headline { font-family: 'Syne', sans-serif; font-size: 74px; font-weight: 800; line-height: 1.0; letter-spacing: -0.025em; }
+    .s8-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+    .s8-stat { padding: 32px 26px; background: rgba(255,255,255,.03); border: 1px solid rgba(255,255,255,.07); border-radius: 20px; display: flex; flex-direction: column; gap: 9px; }
+    .s8-stat:nth-child(1) { border-color: rgba(107,47,255,.22); }
+    .s8-stat:nth-child(2) { border-color: rgba(0,232,204,.22); }
+    .s8-stat:nth-child(3) { border-color: rgba(255,122,47,.22); }
+    .s8-stat:nth-child(4) { border-color: rgba(255,59,107,.22); }
+    .s8-stat-num { font-family: 'Syne', sans-serif; font-size: 72px; font-weight: 800; line-height: 1; background: var(--g-brand); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+    .s8-stat-label { font-size: 19px; color: var(--muted); line-height: 1.45; }
+
+    /* SLIDE 9 — OFFER */
+    .s9-orb1 { width: 500px; height: 500px; background: radial-gradient(circle, rgba(255,59,107,.08) 0%, transparent 65%); bottom: 0; right: 0; }
+    .s9-orb2 { width: 350px; height: 350px; background: radial-gradient(circle, rgba(107,47,255,.14) 0%, transparent 65%); top: -60px; left: -40px; }
+    .s9 .safe { justify-content: center; gap: 40px; }
+    .s9-headline { font-family: 'Syne', sans-serif; font-size: 70px; font-weight: 800; line-height: 1.0; letter-spacing: -0.025em; }
+    .s9-services { display: flex; flex-direction: column; gap: 16px; }
+    .s9-svc { display: flex; align-items: center; gap: 24px; padding: 26px 30px; background: rgba(255,255,255,.03); border: 1px solid rgba(255,255,255,.07); border-radius: 16px; border-left-width: 4px; }
+    .s9-svc:nth-child(1) { border-left-color: var(--purple); }
+    .s9-svc:nth-child(2) { border-left-color: var(--cyan); }
+    .s9-svc:nth-child(3) { border-left-color: var(--coral); }
+    .s9-svc-icon { font-size: 38px; flex-shrink: 0; }
+    .s9-svc-body { flex: 1; }
+    .s9-svc-title { font-family: 'Syne', sans-serif; font-size: 26px; font-weight: 700; margin-bottom: 5px; }
+    .s9-svc-desc { font-size: 19px; color: var(--muted); line-height: 1.4; }
+
+    /* SLIDE 10 — CTA */
+    .s10-bg { position: absolute; inset: 0; background: radial-gradient(ellipse 90% 55% at 50% 0%, rgba(107,47,255,.28) 0%, transparent 68%), radial-gradient(ellipse 70% 40% at 50% 100%, rgba(0,232,204,.1) 0%, transparent 68%); }
+    .s10 .safe { justify-content: center; align-items: center; text-align: center; gap: 32px; }
+    .s10-headline { font-family: 'Syne', sans-serif; font-size: 98px; font-weight: 800; line-height: 0.94; letter-spacing: -0.03em; }
+    .s10-sub { font-size: 25px; color: rgba(255,255,255,.5); line-height: 1.6; max-width: 740px; font-weight: 400; }
+    .s10-actions { display: flex; flex-direction: column; gap: 14px; align-items: center; margin-top: 6px; }
+    .s10-btn-primary { display: inline-flex; align-items: center; justify-content: center; gap: 12px; padding: 24px 58px; border-radius: 100px; background: var(--g-brand); font-family: 'Syne', sans-serif; font-size: 26px; font-weight: 800; color: white; letter-spacing: 0.02em; }
+    .s10-btn-secondary { display: inline-flex; align-items: center; justify-content: center; gap: 10px; padding: 18px 44px; border-radius: 100px; border: 1.5px solid rgba(255,255,255,.16); background: rgba(255,255,255,.04); font-size: 21px; font-weight: 600; color: rgba(255,255,255,.65); }
+    .s10-handle { font-size: 19px; color: var(--muted); letter-spacing: 0.05em; }
+    .s10-handle strong { color: var(--cyan); font-weight: 700; }
+  </style>
+</head>
+<body>
+
+  <div class="page-header">
+    <h1>Nanita Digital — Carousel Template IA Marketing</h1>
+    <p>10 slides • Instagram 1080 × 1080 px • Zones de sécurité respectées</p>
+    <span class="safe-note">⚠️ Safe zone : haut 120px · bas 170px · côtés 70px</span>
+  </div>
+
+  <!-- SLIDE 1 — HOOK -->
+  <div class="slide-block">
+    <span class="slide-label">01 / 10 — Hook</span>
+    <div class="slide-preview">
+      <div class="slide s1">
+        <div class="orb s1-orb1"></div>
+        <div class="orb s1-orb2"></div>
+        <div class="grid-bg"></div>
+        <div class="safe">
+          <span class="s1-eyebrow">Marketing IA</span>
+          <h1 class="s1-headline">Tes concurrents<br>utilisent<br><span class="gb">l'IA.</span></h1>
+          <p class="s1-sub">Et toi, tu postes encore manuellement ?<br>Ce carrousel va changer ta façon de voir le business.</p>
+          <div class="s1-swipe"><div class="s1-swipe-btn">Swipe pour découvrir &nbsp;→</div></div>
+        </div>
+        <div class="logo">
+          <svg class="logo-icon" viewBox="0 0 50 50" fill="none">
+            <defs><linearGradient id="lg1" x1="0" y1="0" x2="50" y2="50" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#6B2FFF"/><stop offset="100%" stop-color="#00E8CC"/></linearGradient></defs>
+            <rect width="50" height="50" rx="13" fill="#0A0918"/>
+            <rect x="0.75" y="0.75" width="48.5" height="48.5" rx="12.25" stroke="url(#lg1)" stroke-width="1.5" stroke-opacity="0.65"/>
+            <path d="M13 39V11L37 39V11" stroke="url(#lg1)" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          <div class="logo-wordmark"><span class="logo-name">NANITA DIGITAL</span><span class="logo-handle">@nanitadigital</span></div>
+        </div>
+        <span class="counter">01 / 10</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 2 — PROBLEM -->
+  <div class="slide-block">
+    <span class="slide-label">02 / 10 — Problème</span>
+    <div class="slide-preview">
+      <div class="slide s2">
+        <div class="orb s2-orb1"></div>
+        <div class="top-rule"></div>
+        <div class="safe">
+          <span class="tag tag-coral" style="margin-bottom:10px">Le problème</span>
+          <h2 class="s2-headline">Tu perds combien d'heures<br>par semaine sur des tâches<br><span class="gf">que l'IA fait en 10 sec ?</span></h2>
+          <div class="s2-items">
+            <div class="s2-item"><span class="s2-item-icon">✖️</span><span class="s2-item-text">Créer du contenu manuellement, slide après slide</span></div>
+            <div class="s2-item"><span class="s2-item-icon">✖️</span><span class="s2-item-text">Répondre aux mêmes questions clients en boucle</span></div>
+            <div class="s2-item"><span class="s2-item-icon">✖️</span><span class="s2-item-text">Analyser tes données à la main dans des tableurs</span></div>
+            <div class="s2-item"><span class="s2-item-icon">✖️</span><span class="s2-item-text">Chercher des idées pendant des heures… pour rien</span></div>
+          </div>
+        </div>
+        <div class="logo">
+          <svg class="logo-icon" viewBox="0 0 50 50" fill="none"><defs><linearGradient id="lg2" x1="0" y1="0" x2="50" y2="50" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#6B2FFF"/><stop offset="100%" stop-color="#00E8CC"/></linearGradient></defs><rect width="50" height="50" rx="13" fill="#0A0918"/><rect x="0.75" y="0.75" width="48.5" height="48.5" rx="12.25" stroke="url(#lg2)" stroke-width="1.5" stroke-opacity="0.65"/><path d="M13 39V11L37 39V11" stroke="url(#lg2)" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <div class="logo-wordmark"><span class="logo-name">NANITA DIGITAL</span><span class="logo-handle">@nanitadigital</span></div>
+        </div>
+        <span class="counter">02 / 10</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 3 — INSIGHT -->
+  <div class="slide-block">
+    <span class="slide-label">03 / 10 — Insight</span>
+    <div class="slide-preview">
+      <div class="slide s3">
+        <div class="orb s3-orb1"></div>
+        <div class="safe">
+          <div class="s3-guillemet">"</div>
+          <h2 class="s3-quote">L'IA ne remplace pas<br>les humains.<br>Elle remplace ceux qui<br><span class="gb">ne savent pas l'utiliser.</span></h2>
+          <div class="s3-divider"></div>
+          <p class="s3-sub">La question n'est plus "est-ce que je dois utiliser l'IA ?"<br>C'est "jusqu'où je veux aller avec elle ?"</p>
+        </div>
+        <div class="logo">
+          <svg class="logo-icon" viewBox="0 0 50 50" fill="none"><defs><linearGradient id="lg3" x1="0" y1="0" x2="50" y2="50" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#6B2FFF"/><stop offset="100%" stop-color="#00E8CC"/></linearGradient></defs><rect width="50" height="50" rx="13" fill="#0A0918"/><rect x="0.75" y="0.75" width="48.5" height="48.5" rx="12.25" stroke="url(#lg3)" stroke-width="1.5" stroke-opacity="0.65"/><path d="M13 39V11L37 39V11" stroke="url(#lg3)" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <div class="logo-wordmark"><span class="logo-name">NANITA DIGITAL</span><span class="logo-handle">@nanitadigital</span></div>
+        </div>
+        <span class="counter">03 / 10</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 4 — OPPORTUNITY -->
+  <div class="slide-block">
+    <span class="slide-label">04 / 10 — Opportunités</span>
+    <div class="slide-preview">
+      <div class="slide s4">
+        <div class="orb s4-orb1"></div>
+        <div class="orb s4-orb2"></div>
+        <div class="safe">
+          <span class="tag tag-cyan" style="margin-bottom:6px">Ce que l'IA fait pour toi</span>
+          <h2 class="s4-headline">4 leviers IA<br><span class="gb">pour ton business</span></h2>
+          <div class="s4-grid">
+            <div class="s4-card"><span class="s4-card-icon">🎨</span><div class="s4-card-title">Création de contenu</div><div class="s4-card-text">Posts, carrousels, newsletters en quelques minutes</div></div>
+            <div class="s4-card"><span class="s4-card-icon">📊</span><div class="s4-card-title">Analyse de données</div><div class="s4-card-text">Insights business automatisés en temps réel</div></div>
+            <div class="s4-card"><span class="s4-card-icon">💬</span><div class="s4-card-title">Service client IA</div><div class="s4-card-text">Réponses ultra-rapides, 24h/7j, sans effort</div></div>
+            <div class="s4-card"><span class="s4-card-icon">🎯</span><div class="s4-card-title">Marketing ciblé</div><div class="s4-card-text">Campagnes personnalisées à grande échelle</div></div>
+          </div>
+        </div>
+        <div class="logo">
+          <svg class="logo-icon" viewBox="0 0 50 50" fill="none"><defs><linearGradient id="lg4" x1="0" y1="0" x2="50" y2="50" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#6B2FFF"/><stop offset="100%" stop-color="#00E8CC"/></linearGradient></defs><rect width="50" height="50" rx="13" fill="#0A0918"/><rect x="0.75" y="0.75" width="48.5" height="48.5" rx="12.25" stroke="url(#lg4)" stroke-width="1.5" stroke-opacity="0.65"/><path d="M13 39V11L37 39V11" stroke="url(#lg4)" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <div class="logo-wordmark"><span class="logo-name">NANITA DIGITAL</span><span class="logo-handle">@nanitadigital</span></div>
+        </div>
+        <span class="counter">04 / 10</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 5 — HOW TO START -->
+  <div class="slide-block">
+    <span class="slide-label">05 / 10 — Comment démarrer</span>
+    <div class="slide-preview">
+      <div class="slide s5">
+        <div class="orb s5-orb1"></div>
+        <div class="top-rule"></div>
+        <div class="safe">
+          <span class="tag tag-purple" style="margin-bottom:6px">Le framework</span>
+          <h2 class="s5-headline">Démarrer avec l'IA<br><span class="gb">en 3 étapes.</span></h2>
+          <div class="s5-steps">
+            <div class="s5-step"><div class="s5-num">1</div><div class="s5-step-body"><div class="s5-step-title">Identifie ta tâche la plus chronophage</div><div class="s5-step-text">Là où tu perds le plus de temps chaque semaine — commence par là.</div></div></div>
+            <div class="s5-step"><div class="s5-num">2</div><div class="s5-step-body"><div class="s5-step-title">Trouve l'outil IA adapté</div><div class="s5-step-text">ChatGPT, Midjourney, <Make.com>… chaque besoin a son outil.</div></div></div>
+            <div class="s5-step"><div class="s5-num">3</div><div class="s5-step-body"><div class="s5-step-title">Automatise et libère du temps</div><div class="s5-step-text">Réinvestis ce temps sur ce qui crée vraiment de la valeur.</div></div></div>
+          </div>
+        </div>
+        <div class="logo">
+          <svg class="logo-icon" viewBox="0 0 50 50" fill="none"><defs><linearGradient id="lg5" x1="0" y1="0" x2="50" y2="50" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#6B2FFF"/><stop offset="100%" stop-color="#00E8CC"/></linearGradient></defs><rect width="50" height="50" rx="13" fill="#0A0918"/><rect x="0.75" y="0.75" width="48.5" height="48.5" rx="12.25" stroke="url(#lg5)" stroke-width="1.5" stroke-opacity="0.65"/><path d="M13 39V11L37 39V11" stroke="url(#lg5)" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <div class="logo-wordmark"><span class="logo-name">NANITA DIGITAL</span><span class="logo-handle">@nanitadigital</span></div>
+        </div>
+        <span class="counter">05 / 10</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 6 — WHY EXPERT -->
+  <div class="slide-block">
+    <span class="slide-label">06 / 10 — Pourquoi un expert IA</span>
+    <div class="slide-preview">
+      <div class="slide s6">
+        <div class="orb s6-orb1"></div>
+        <div class="safe">
+          <span class="tag tag-orange" style="margin-bottom:6px">Expert IA</span>
+          <h2 class="s6-headline">Pourquoi ne pas<br>faire ça <span class="gm">tout seul ?</span></h2>
+          <div class="s6-list">
+            <div class="s6-item"><div class="s6-bullet"></div><p class="s6-item-text">Tu gagnes <em>des mois d'apprentissage inutiles</em> — on a déjà fait les erreurs pour toi</p></div>
+            <div class="s6-item"><div class="s6-bullet"></div><p class="s6-item-text">Tu évites les <em>pièges coûteux</em> : mauvais outils, mauvaise stack, mauvais prompt</p></div>
+            <div class="s6-item"><div class="s6-bullet"></div><p class="s6-item-text">Tu as une <em>stratégie sur-mesure</em>, pas un template copié-collé d'un tuto YouTube</p></div>
+            <div class="s6-item"><div class="s6-bullet"></div><p class="s6-item-text">Tu passes de <em>"j'essaie"</em> à <em>"ça fonctionne"</em> — rapidement</p></div>
+          </div>
+        </div>
+        <div class="logo">
+          <svg class="logo-icon" viewBox="0 0 50 50" fill="none"><defs><linearGradient id="lg6" x1="0" y1="0" x2="50" y2="50" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#6B2FFF"/><stop offset="100%" stop-color="#00E8CC"/></linearGradient></defs><rect width="50" height="50" rx="13" fill="#0A0918"/><rect x="0.75" y="0.75" width="48.5" height="48.5" rx="12.25" stroke="url(#lg6)" stroke-width="1.5" stroke-opacity="0.65"/><path d="M13 39V11L37 39V11" stroke="url(#lg6)" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <div class="logo-wordmark"><span class="logo-name">NANITA DIGITAL</span><span class="logo-handle">@nanitadigital</span></div>
+        </div>
+        <span class="counter">06 / 10</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 7 — AI AGENT -->
+  <div class="slide-block">
+    <span class="slide-label">07 / 10 — Agent IA</span>
+    <div class="slide-preview">
+      <div class="slide s7">
+        <div class="orb s7-orb1"></div>
+        <div class="orb s7-orb2"></div>
+        <div class="top-rule"></div>
+        <div class="safe">
+          <span class="tag tag-cyan" style="margin-bottom:6px">Concept clé</span>
+          <h2 class="s7-headline">C'est quoi<br><span class="gb">un agent IA ?</span></h2>
+          <div class="s7-def">Un programme intelligent qui <strong style="color:#fff">agit à ta place</strong> : il lit ta boîte mail, décide quoi faire, répond, relance et classe — <strong style="color:#fff">sans que tu touches à rien.</strong></div>
+          <div class="s7-features">
+            <div class="s7-feat"><span class="s7-feat-icon">🧠</span><span class="s7-feat-label">Il pense</span></div>
+            <div class="s7-feat"><span class="s7-feat-icon">⚡</span><span class="s7-feat-label">Il agit</span></div>
+            <div class="s7-feat"><span class="s7-feat-icon">🔄</span><span class="s7-feat-label">Il apprend</span></div>
+          </div>
+        </div>
+        <div class="logo">
+          <svg class="logo-icon" viewBox="0 0 50 50" fill="none"><defs><linearGradient id="lg7" x1="0" y1="0" x2="50" y2="50" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#6B2FFF"/><stop offset="100%" stop-color="#00E8CC"/></linearGradient></defs><rect width="50" height="50" rx="13" fill="#0A0918"/><rect x="0.75" y="0.75" width="48.5" height="48.5" rx="12.25" stroke="url(#lg7)" stroke-width="1.5" stroke-opacity="0.65"/><path d="M13 39V11L37 39V11" stroke="url(#lg7)" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <div class="logo-wordmark"><span class="logo-name">NANITA DIGITAL</span><span class="logo-handle">@nanitadigital</span></div>
+        </div>
+        <span class="counter">07 / 10</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 8 — RESULTS -->
+  <div class="slide-block">
+    <span class="slide-label">08 / 10 — Résultats</span>
+    <div class="slide-preview">
+      <div class="slide s8">
+        <div class="orb s8-orb1"></div>
+        <div class="orb s8-orb2"></div>
+        <div class="safe">
+          <span class="tag tag-purple" style="margin-bottom:6px">Preuves</span>
+          <h2 class="s8-headline">Les résultats<br><span class="gb">parlent d'eux-mêmes.</span></h2>
+          <div class="s8-grid">
+            <div class="s8-stat"><div class="s8-stat-num">×10</div><div class="s8-stat-label">Plus de contenu produit avec la même équipe</div></div>
+            <div class="s8-stat"><div class="s8-stat-num">−70%</div><div class="s8-stat-label">De temps sur les tâches répétitives</div></div>
+            <div class="s8-stat"><div class="s8-stat-num">+3×</div><div class="s8-stat-label">D'engagement sur les posts créés avec l'IA</div></div>
+            <div class="s8-stat"><div class="s8-stat-num">48h</div><div class="s8-stat-label">Pour automatiser ton premier process</div></div>
+          </div>
+        </div>
+        <div class="logo">
+          <svg class="logo-icon" viewBox="0 0 50 50" fill="none"><defs><linearGradient id="lg8" x1="0" y1="0" x2="50" y2="50" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#6B2FFF"/><stop offset="100%" stop-color="#00E8CC"/></linearGradient></defs><rect width="50" height="50" rx="13" fill="#0A0918"/><rect x="0.75" y="0.75" width="48.5" height="48.5" rx="12.25" stroke="url(#lg8)" stroke-width="1.5" stroke-opacity="0.65"/><path d="M13 39V11L37 39V11" stroke="url(#lg8)" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <div class="logo-wordmark"><span class="logo-name">NANITA DIGITAL</span><span class="logo-handle">@nanitadigital</span></div>
+        </div>
+        <span class="counter">08 / 10</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 9 — OFFER -->
+  <div class="slide-block">
+    <span class="slide-label">09 / 10 — Offre</span>
+    <div class="slide-preview">
+      <div class="slide s9">
+        <div class="orb s9-orb1"></div>
+        <div class="orb s9-orb2"></div>
+        <div class="top-rule"></div>
+        <div class="safe">
+          <span class="tag tag-purple" style="margin-bottom:6px">Notre offre</span>
+          <h2 class="s9-headline"><span class="gb">Nanita Digital</span><br>t'accompagne.</h2>
+          <div class="s9-services">
+            <div class="s9-svc"><span class="s9-svc-icon">🎯</span><div class="s9-svc-body"><div class="s9-svc-title">Stratégie IA sur-mesure</div><div class="s9-svc-desc">On audit ton business et on construit ta feuille de route IA complète</div></div></div>
+            <div class="s9-svc"><span class="s9-svc-icon">🤖</span><div class="s9-svc-body"><div class="s9-svc-title">Création d'agents IA</div><div class="s9-svc-desc">Des automatisations intelligentes qui travaillent pour toi 24h/24</div></div></div>
+            <div class="s9-svc"><span class="s9-svc-icon">📱</span><div class="s9-svc-body"><div class="s9-svc-title">Contenu & Marketing IA</div><div class="s9-svc-desc">Posts, tunnels, campagnes — propulsés par l'intelligence artificielle</div></div></div>
+          </div>
+        </div>
+        <div class="logo">
+          <svg class="logo-icon" viewBox="0 0 50 50" fill="none"><defs><linearGradient id="lg9" x1="0" y1="0" x2="50" y2="50" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#6B2FFF"/><stop offset="100%" stop-color="#00E8CC"/></linearGradient></defs><rect width="50" height="50" rx="13" fill="#0A0918"/><rect x="0.75" y="0.75" width="48.5" height="48.5" rx="12.25" stroke="url(#lg9)" stroke-width="1.5" stroke-opacity="0.65"/><path d="M13 39V11L37 39V11" stroke="url(#lg9)" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <div class="logo-wordmark"><span class="logo-name">NANITA DIGITAL</span><span class="logo-handle">@nanitadigital</span></div>
+        </div>
+        <span class="counter">09 / 10</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 10 — CTA -->
+  <div class="slide-block">
+    <span class="slide-label">10 / 10 — Call to Action</span>
+    <div class="slide-preview">
+      <div class="slide s10">
+        <div class="s10-bg"></div>
+        <div class="grid-bg"></div>
+        <div class="safe">
+          <h2 class="s10-headline">Prêt(e) à<br><span class="gb">déléguer</span><br>à l'IA ?</h2>
+          <p class="s10-sub">Rejoins les entrepreneurs qui ont fait le switch.<br>Le temps que tu perds aujourd'hui, on peut l'automatiser demain.</p>
+          <div class="s10-actions">
+            <div class="s10-btn-primary">DM "IA" pour démarrer &nbsp;✉️</div>
+            <div class="s10-btn-secondary">🔔 &nbsp;Suis pour ne rien rater</div>
+            <div class="s10-handle">Lien en bio → <strong><nanitadigital.com></strong></div>
+          </div>
+        </div>
+        <div class="logo">
+          <svg class="logo-icon" viewBox="0 0 50 50" fill="none"><defs><linearGradient id="lg10" x1="0" y1="0" x2="50" y2="50" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#6B2FFF"/><stop offset="100%" stop-color="#00E8CC"/></linearGradient></defs><rect width="50" height="50" rx="13" fill="#0A0918"/><rect x="0.75" y="0.75" width="48.5" height="48.5" rx="12.25" stroke="url(#lg10)" stroke-width="1.5" stroke-opacity="0.65"/><path d="M13 39V11L37 39V11" stroke="url(#lg10)" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <div class="logo-wordmark"><span class="logo-name">NANITA DIGITAL</span><span class="logo-handle">@nanitadigital</span></div>
+        </div>
+        <span class="counter">10 / 10</span>
+      </div>
+    </div>
+  </div>
+
+</body>
+</html>
